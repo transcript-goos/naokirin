@@ -1,6 +1,7 @@
 package test.groovy.endtoend.auctionsniper
 
 import static test.groovy.endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME
+import main.groovy.auctionsniper.Main
 
 class ApplicationRunner {
     static final String SNIPER_ID = "sniper"

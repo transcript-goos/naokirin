@@ -8,6 +8,8 @@ def jdkVersion = 1.7
 sourceCompatibility = jdkVersion
 targetCompatibility = jdkVersion
 
+mainClassName = "main.groovy.auctionsniper.Main"
+
 [compileJava, compileTestJava, compileGroovy, compileTestGroovy]
         .each{ it.options.encoding = defaultEncoding }
 
@@ -39,3 +41,4 @@ jar {
 // Read *.gradle at gradle directory
 fileTree(dir: 'gradle', includes: ['*.gradle']).each { apply from: it }
 
+manifest.mainAttributes("Main-Class" : mainClassName)

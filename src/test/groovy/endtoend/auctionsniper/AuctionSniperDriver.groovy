@@ -6,6 +6,7 @@ import com.objogate.wl.swing.driver.JFrameDriver
 import com.objogate.wl.swing.gesture.GesturePerformer
 import com.objogate.wl.swing.AWTEventQueueProber
 import com.objogate.wl.swing.driver.JLabelDriver
+import main.groovy.auctionsniper.Main
 
 class AuctionSniperDriver extends JFrameDriver {
     AuctionSniperDriver(int timeoutMillis) {
