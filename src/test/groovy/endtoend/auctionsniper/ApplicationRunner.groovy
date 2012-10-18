@@ -1,9 +1,10 @@
 package test.groovy.endtoend.auctionsniper
 
+import static test.groovy.endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME
+
 class ApplicationRunner {
     static final String SNIPER_ID = "sniper"
     static final String SNIPER_PASSWORD = "sniper"
-    static final String XMPP_HOSTNAME = null
     static final String STATUS_JOINING = null
     static final String STATUS_LOST = null
 
