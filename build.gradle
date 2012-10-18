@@ -1,0 +1,41 @@
+apply plugin:'groovy'
+apply plugin:'application'
+apply plugin:'maven'
+
+def defaultEncoding = 'UTF-8'
+
+def jdkVersion = 1.7
+sourceCompatibility = jdkVersion
+targetCompatibility = jdkVersion
+
+[compileJava, compileTestJava, compileGroovy, compileTestGroovy]
+        .each{ it.options.encoding = defaultEncoding }
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    groovy group:'org.codehaus.groovy', name:'groovy-all', version:'2.0.4'
+    compile 'asm:asm:3.2'
+    compile 'org.igniterealtime.smack:smack:3.2.1'
+    compile 'org.igniterealtime.smack:smackx:3.2.1'
+
+    testCompile fileTree('lib')
+    testCompile group:'org.spockframework', name:'spock-core', version:'0.7-groovy-2.0'
+
+    // optional dependencies for using Spock
+    testCompile "org.hamcrest:hamcrest-core:1.2"
+    testRuntime "cglib:cglib-nodep:2.2"
+    testRuntime "org.objenesis:objenesis:1.2"
+}
+
+// jar
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+
+// Read *.gradle at gradle directory
+fileTree(dir: 'gradle', includes: ['*.gradle']).each { apply from: it }
+
