@@ -7,12 +7,11 @@ import org.jivesoftware.smack.packet.Message
 import org.jivesoftware.smack.MessageListener
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.TimeUnit
+import main.groovy.auctionsniper.Main
 
 class FakeAuctionServer {
     private final SingleMessageListener messageListener = new SingleMessageListener()
 
-    static final String ITEM_ID_AS_LOGIN = "auction-%s"
-    static final String AUCTION_RESOURCE = "Auction"
     static final String XMPP_HOSTNAME = "localhost"
     private static final String AUCTION_PASSWORD = "auction"
 
@@ -27,7 +26,7 @@ class FakeAuctionServer {
 
     void startSellingItem() {
         connection.connect()
-        connection.login(String.format(ITEM_ID_AS_LOGIN, itemId), AUCTION_PASSWORD, AUCTION_RESOURCE)
+        connection.login(String.format(Main.ITEM_ID_AS_LOGIN, itemId), AUCTION_PASSWORD, Main.AUCTION_RESOURCE)
         connection.getChatManager().addChatListener(
             new ChatManagerListener() {
 
