@@ -1,6 +1,7 @@
 package main.groovy.auctionsniper
 
 import javax.swing.SwingUtilities
+import main.groovy.auctionsniper.ui.MainWindow
 
 class Main {
     private MainWindow ui
