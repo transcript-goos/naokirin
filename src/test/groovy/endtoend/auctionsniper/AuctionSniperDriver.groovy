@@ -7,6 +7,7 @@ import com.objogate.wl.swing.gesture.GesturePerformer
 import com.objogate.wl.swing.AWTEventQueueProber
 import com.objogate.wl.swing.driver.JLabelDriver
 import main.groovy.auctionsniper.Main
+import main.groovy.auctionsniper.ui.MainWindow
 
 class AuctionSniperDriver extends JFrameDriver {
     AuctionSniperDriver(int timeoutMillis) {
@@ -19,7 +20,7 @@ class AuctionSniperDriver extends JFrameDriver {
 
     void showsSniperStatus(String statusText) {
         new JLabelDriver(
-                this, named(Main.SNIPER_STATUS_NAME)).hasText(equalTo(statusText))
+                this, named(MainWindow.SNIPER_STATUS_NAME)).hasText(equalTo(statusText))
     }
 }
 

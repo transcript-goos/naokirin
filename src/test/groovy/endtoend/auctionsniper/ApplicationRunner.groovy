@@ -1,13 +1,13 @@
 package test.groovy.endtoend.auctionsniper
 
 import static test.groovy.endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME
+import static main.groovy.auctionsniper.ui.MainWindow.STATUS_JOINING
+import static main.groovy.auctionsniper.ui.MainWindow.STATUS_LOST
 import main.groovy.auctionsniper.Main
 
 class ApplicationRunner {
     static final String SNIPER_ID = "sniper"
     static final String SNIPER_PASSWORD = "sniper"
-    static final String STATUS_JOINING = null
-    static final String STATUS_LOST = null
 
     private AuctionSniperDriver driver
 

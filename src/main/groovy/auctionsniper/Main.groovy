@@ -6,8 +6,7 @@ import main.groovy.auctionsniper.ui.MainWindow
 class Main {
     private MainWindow ui
 
-    static final MAIN_WINDOW_NAME = null
-    static final SNIPER_STATUS_NAME = null
+    static final MAIN_WINDOW_NAME = 'Auction Sniper Main'
 
     Main () {
         startUserInterface()
