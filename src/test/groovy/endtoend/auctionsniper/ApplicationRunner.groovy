@@ -8,6 +8,7 @@ import main.groovy.auctionsniper.Main
 class ApplicationRunner {
     static final String SNIPER_ID = "sniper"
     static final String SNIPER_PASSWORD = "sniper"
+    static final String SNIPER_XMPP_ID = 'sniper@localhost/Auction'
 
     private AuctionSniperDriver driver
 

@@ -10,7 +10,7 @@ class AuctionSniperEndToEndTest extends Specification {
         when:
         auction.startSellingItem()
         application.startBiddingIn(auction)
-        auction.hasReceivedJoinRequestFromSniper()
+        auction.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID)
         auction.announceClosed()
         application.showsSniperHasLostAuction()
 
@@ -23,7 +23,7 @@ class AuctionSniperEndToEndTest extends Specification {
         auction.startSellingItem()
 
         application.startBiddingIn(auction)
-        auction.hasReceivedJoinRequestFromSniper()
+        auction.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID)
 
         auction.reportPrice(1000, 98, 'other bidder')
 
