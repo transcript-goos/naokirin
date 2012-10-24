@@ -1,5 +1,8 @@
 package test.groovy.endtoend.auctionsniper
 
+import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.MatcherAssert.assertThat
+
 import org.jivesoftware.smack.XMPPConnection
 import org.jivesoftware.smack.Chat
 import org.jivesoftware.smack.ChatManagerListener
@@ -8,6 +11,10 @@ import org.jivesoftware.smack.MessageListener
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.TimeUnit
 import main.groovy.auctionsniper.Main
+import org.hamcrest.Matcher
+
+import static org.hamcrest.Matchers.is
+import static org.hamcrest.Matchers.notNullValue
 
 class FakeAuctionServer {
     private final SingleMessageListener messageListener = new SingleMessageListener()
@@ -43,8 +50,8 @@ class FakeAuctionServer {
         return itemId
     }
 
-    void hasReceivedJoinRequestFromSniper() {
-        messageListener.receivesAMessage()
+    void hasReceivedJoinRequestFrom(String sniperId) {
+        receivesAMessageMatching(sniperId, equalTo(Main.JOIN_COMMAND_FORMAT))
     }
 
     void announceClosed() {
@@ -53,6 +60,22 @@ class FakeAuctionServer {
 
     void stop() {
         connection.disconnect()
+    }
+
+    void reportPrice(int price, int increment, String bidder) {
+        currentChat.sendMessage(
+                String.format('SOLVersion: 1.1; Event: PRICE; CurrentPrice: %d; '
+                            + 'Increment: %d; Bidder: %s;', price, increment, bidder))
+    }
+
+    void hasReceivedBid(int bid, String sniperId) {
+        receivesAMessageMatching(sniperId,
+            equalTo(String.format(Main.BID_COMMAND_FORMAT, bid)))
+    }
+
+    void receivesAMessageMatching(String sniperId, Matcher<? super String> messageMatcher) {
+        messageListener.receivesAMessage(messageMatcher)
+        assertThat currentChat.getParticipant(), equalTo(sniperId)
     }
 
     class SingleMessageListener implements MessageListener {
@@ -64,8 +87,11 @@ class FakeAuctionServer {
             messages.add(message)
         }
 
-        void receivesAMessage() {
-            assert messages.poll(5, TimeUnit.SECONDS) != null, 'Message'
+        @SuppressWarnings('unchecked')
+        void receivesAMessage(Matcher<? super String> messageMatcher) {
+            final Message message = messages.poll(5, TimeUnit.SECONDS)
+            assertThat 'Message', message, is(notNullValue())
+            assertThat message.getBody(), messageMatcher
         }
     }
 }

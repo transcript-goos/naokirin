@@ -4,10 +4,12 @@ import static test.groovy.endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME
 import static main.groovy.auctionsniper.ui.MainWindow.STATUS_JOINING
 import static main.groovy.auctionsniper.ui.MainWindow.STATUS_LOST
 import main.groovy.auctionsniper.Main
+import main.groovy.auctionsniper.ui.MainWindow
 
 class ApplicationRunner {
     static final String SNIPER_ID = "sniper"
     static final String SNIPER_PASSWORD = "sniper"
+    static final String SNIPER_XMPP_ID = 'sniper@localhost/Auction'
 
     private AuctionSniperDriver driver
 
@@ -35,5 +37,9 @@ class ApplicationRunner {
         if (driver != null) {
             driver.dispose()
         }
+    }
+
+   void hasShownSniperIsBidding() {
+       driver.showsSniperStatus(MainWindow.STATUS_BIDDING)
     }
 }
