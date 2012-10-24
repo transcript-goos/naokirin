@@ -1,13 +1,14 @@
 package main.groovy.auctionsniper
 
-import javax.swing.SwingUtilities
 import main.groovy.auctionsniper.ui.MainWindow
+
 import org.jivesoftware.smack.XMPPConnection
 import org.jivesoftware.smack.Chat
 import org.jivesoftware.smack.MessageListener
 import org.jivesoftware.smack.packet.Message
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import javax.swing.SwingUtilities
 
 class Main {
     @SuppressWarnings('unused')
@@ -18,10 +19,10 @@ class Main {
     private static final int ARG_PASSWORD = 2
     private static final int ARG_ITEM_ID = 3
 
-    public static final String ITEM_ID_AS_LOGIN = "auction-%s"
-    public static final String AUCTION_RESOURCE = "Auction"
+    public static final String ITEM_ID_AS_LOGIN = 'auction-%s'
+    public static final String AUCTION_RESOURCE = 'Auction'
     public static final String AUCTION_ID_FORMAT =
-        ITEM_ID_AS_LOGIN + '@%s/' + AUCTION_RESOURCE
+        "$ITEM_ID_AS_LOGIN@%s/$AUCTION_RESOURCE"
 
     static String JOIN_COMMAND_FORMAT = 'SOLVersion: 1.1; Command: JOIN;'
     static String BID_COMMAND_FORMAT = 'SOLVersion: 1.1; Command: Bid; Price: %d;'
@@ -95,6 +96,4 @@ class Main {
             }
         })
     }
-
-
 }

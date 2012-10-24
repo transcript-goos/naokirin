@@ -1,8 +1,5 @@
 package test.groovy.endtoend.auctionsniper
 
-import static org.hamcrest.Matchers.equalTo
-import static org.hamcrest.MatcherAssert.assertThat
-
 import org.jivesoftware.smack.XMPPConnection
 import org.jivesoftware.smack.Chat
 import org.jivesoftware.smack.ChatManagerListener
@@ -11,16 +8,12 @@ import org.jivesoftware.smack.MessageListener
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.TimeUnit
 import main.groovy.auctionsniper.Main
-import org.hamcrest.Matcher
-
-import static org.hamcrest.Matchers.is
-import static org.hamcrest.Matchers.notNullValue
 
 class FakeAuctionServer {
     private final SingleMessageListener messageListener = new SingleMessageListener()
 
-    static final String XMPP_HOSTNAME = "localhost"
-    private static final String AUCTION_PASSWORD = "auction"
+    static final String XMPP_HOSTNAME = 'localhost'
+    private static final String AUCTION_PASSWORD = 'auction'
 
     private final String itemId
     private final XMPPConnection connection
@@ -51,7 +44,7 @@ class FakeAuctionServer {
     }
 
     void hasReceivedJoinRequestFrom(String sniperId) {
-        receivesAMessageMatching(sniperId, equalTo(Main.JOIN_COMMAND_FORMAT))
+        receivesAMessageMatching(sniperId, Main.JOIN_COMMAND_FORMAT)
     }
 
     void announceClosed() {
@@ -64,23 +57,21 @@ class FakeAuctionServer {
 
     void reportPrice(int price, int increment, String bidder) {
         currentChat.sendMessage(
-                String.format('SOLVersion: 1.1; Event: PRICE; CurrentPrice: %d; '
-                            + 'Increment: %d; Bidder: %s;', price, increment, bidder))
+                "SOLVersion: 1.1; Event: PRICE; CurrentPrice: $price; Increment: $increment; Bidder: $bidder")
     }
 
     void hasReceivedBid(int bid, String sniperId) {
         receivesAMessageMatching(sniperId,
-            equalTo(String.format(Main.BID_COMMAND_FORMAT, bid)))
+            String.format(Main.BID_COMMAND_FORMAT, bid))
     }
 
-    void receivesAMessageMatching(String sniperId, Matcher<? super String> messageMatcher) {
-        messageListener.receivesAMessage(messageMatcher)
-        assertThat currentChat.getParticipant(), equalTo(sniperId)
+    void receivesAMessageMatching(String sniperId, String match) {
+        messageListener.receivesAMessage(match)
+        assert currentChat.participant == sniperId
     }
 
     class SingleMessageListener implements MessageListener {
-        private final ArrayBlockingQueue<Message> messages =
-            new ArrayBlockingQueue(1)
+        private final def messages = new ArrayBlockingQueue(1)
 
         @Override
         void processMessage(Chat chat, Message message) {
@@ -88,10 +79,10 @@ class FakeAuctionServer {
         }
 
         @SuppressWarnings('unchecked')
-        void receivesAMessage(Matcher<? super String> messageMatcher) {
+        void receivesAMessage(match) {
             final Message message = messages.poll(5, TimeUnit.SECONDS)
-            assertThat 'Message', message, is(notNullValue())
-            assertThat message.getBody(), messageMatcher
+            assert message != null, 'Message'
+            assert match in message?.body
         }
     }
 }
