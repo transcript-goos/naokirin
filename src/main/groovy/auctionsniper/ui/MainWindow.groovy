@@ -1,7 +1,9 @@
 package main.groovy.auctionsniper.ui
 
-import javax.swing.JFrame
+
 import static main.groovy.auctionsniper.Main.MAIN_WINDOW_NAME
+
+import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.border.LineBorder
 import java.awt.Color

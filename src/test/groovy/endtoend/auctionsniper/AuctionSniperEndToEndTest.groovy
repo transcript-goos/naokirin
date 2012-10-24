@@ -3,7 +3,7 @@ package test.groovy.endtoend.auctionsniper
 import spock.lang.Specification
 
 class AuctionSniperEndToEndTest extends Specification {
-    private final FakeAuctionServer auction = new FakeAuctionServer("item-54321")
+    private final FakeAuctionServer auction = new FakeAuctionServer('item-54321')
     private final ApplicationRunner application = new ApplicationRunner()
 
     def "Sniper joins auction until auction closes"() {
