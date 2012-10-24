@@ -20,8 +20,8 @@ repositories {
 dependencies {
     groovy group:'org.codehaus.groovy', name:'groovy-all', version:'2.0.4'
     compile 'asm:asm:3.2'
-    compile 'org.igniterealtime.smack:smack:3.2.1'
-    compile 'org.igniterealtime.smack:smackx:3.2.1'
+    compile 'org.igniterealtime.smack:smack:3.1.0'
+    compile 'org.igniterealtime.smack:smackx:3.1.0'
 
     testCompile fileTree('lib')
     testCompile group:'org.spockframework', name:'spock-core', version:'0.7-groovy-2.0'

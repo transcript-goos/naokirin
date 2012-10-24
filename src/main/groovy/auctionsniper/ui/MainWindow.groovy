@@ -1,7 +1,9 @@
 package main.groovy.auctionsniper.ui
 
-import javax.swing.JFrame
+
 import static main.groovy.auctionsniper.Main.MAIN_WINDOW_NAME
+
+import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.border.LineBorder
 import java.awt.Color
@@ -11,6 +13,7 @@ class MainWindow extends JFrame {
     static final String SNIPER_STATUS_NAME = 'sniper status'
     static final String STATUS_JOINING = 'Joining'
     static final String STATUS_LOST = 'Lost'
+    static String STATUS_BIDDING = 'Bidding'
     private JLabel sniperStatus = createLabel(STATUS_JOINING)
 
     MainWindow () {

@@ -12,8 +12,8 @@ import main.groovy.auctionsniper.Main
 class FakeAuctionServer {
     private final SingleMessageListener messageListener = new SingleMessageListener()
 
-    static final String XMPP_HOSTNAME = "localhost"
-    private static final String AUCTION_PASSWORD = "auction"
+    static final String XMPP_HOSTNAME = 'localhost'
+    private static final String AUCTION_PASSWORD = 'auction'
 
     private final String itemId
     private final XMPPConnection connection
@@ -43,8 +43,8 @@ class FakeAuctionServer {
         return itemId
     }
 
-    void hasReceivedJoinRequestFromSniper() {
-        messageListener.receivesAMessage()
+    void hasReceivedJoinRequestFrom(String sniperId) {
+        receivesAMessageMatching(sniperId, Main.JOIN_COMMAND_FORMAT)
     }
 
     void announceClosed() {
@@ -55,17 +55,34 @@ class FakeAuctionServer {
         connection.disconnect()
     }
 
+    void reportPrice(int price, int increment, String bidder) {
+        currentChat.sendMessage(
+                "SOLVersion: 1.1; Event: PRICE; CurrentPrice: $price; Increment: $increment; Bidder: $bidder")
+    }
+
+    void hasReceivedBid(int bid, String sniperId) {
+        receivesAMessageMatching(sniperId,
+            String.format(Main.BID_COMMAND_FORMAT, bid))
+    }
+
+    void receivesAMessageMatching(String sniperId, String match) {
+        messageListener.receivesAMessage(match)
+        assert currentChat.participant == sniperId
+    }
+
     class SingleMessageListener implements MessageListener {
-        private final ArrayBlockingQueue<Message> messages =
-            new ArrayBlockingQueue(1)
+        private final def messages = new ArrayBlockingQueue(1)
 
         @Override
         void processMessage(Chat chat, Message message) {
             messages.add(message)
         }
 
-        void receivesAMessage() {
-            assert messages.poll(5, TimeUnit.SECONDS) != null, 'Message'
+        @SuppressWarnings('unchecked')
+        void receivesAMessage(match) {
+            final Message message = messages.poll(5, TimeUnit.SECONDS)
+            assert message != null, 'Message'
+            assert match in message?.body
         }
     }
 }
