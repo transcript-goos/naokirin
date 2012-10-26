@@ -26,4 +26,16 @@ class AuctionMessageTranslatorTest extends Specification {
         then:
         1 * listener.auctionClosed()
     }
+
+    def "notifies bid details when current price message received"() {
+        given:
+        def message = new Message()
+        message.body = 'SOLVersion: 1.1; Event: PRICE; CurrentPrice: 192; Increment: 7; Bidder: Someone else;'
+
+        when:
+        translator.processMessage(UNUSED_CHAT, message)
+
+        then:
+        1 * listener.currentPrice(192, 7)
+    }
 }

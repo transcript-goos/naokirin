@@ -43,7 +43,7 @@ class FakeAuctionServer {
     }
 
     void announceClosed() {
-        currentChat.sendMessage(new Message())
+        currentChat.sendMessage('SOLVersion: 1.1; Event: CLOSE;')
     }
 
     void stop() {
