@@ -5,7 +5,6 @@ import main.groovy.auctionsniper.ui.MainWindow
 import org.jivesoftware.smack.XMPPConnection
 import org.jivesoftware.smack.Chat
 import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
 import javax.swing.SwingUtilities
 
 class Main implements AuctionEventListener {
@@ -72,5 +71,10 @@ class Main implements AuctionEventListener {
     @Override
     void auctionClosed() {
         SwingUtilities.invokeLater({ ui.showStatus(MainWindow.STATUS_LOST) } as Runnable)
+    }
+
+    @Override
+    void currentPrice(int price, int increment) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

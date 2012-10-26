@@ -1,5 +1,6 @@
 package main.groovy.auctionsniper
 
 interface AuctionEventListener extends EventListener {
-    public void auctionClosed()
+    void auctionClosed()
+    void currentPrice(int price, int increment)
 }
