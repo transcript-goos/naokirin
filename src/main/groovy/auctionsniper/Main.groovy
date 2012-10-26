@@ -4,13 +4,11 @@ import main.groovy.auctionsniper.ui.MainWindow
 
 import org.jivesoftware.smack.XMPPConnection
 import org.jivesoftware.smack.Chat
-import org.jivesoftware.smack.MessageListener
-import org.jivesoftware.smack.packet.Message
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.SwingUtilities
 
-class Main {
+class Main implements AuctionEventListener {
     @SuppressWarnings('unused')
     private Chat notToBeGCd
 
@@ -45,23 +43,8 @@ class Main {
     private void joinAuction(XMPPConnection connection, String itemId) {
         disconnectWhenUICloses(connection)
 
-        // If create Runnable object in the argument of the invokeLater,
-        // throws MissingFieldException about ui
-        def main = this
-
         final Chat chat = connection.getChatManager().createChat(
-                auctionId(itemId, connection), new MessageListener() {
-
-                    @Override
-                    void processMessage(Chat chat, Message message) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            void run() {
-                                main.ui.showStatus(MainWindow.STATUS_LOST)
-                            }
-                        })
-                    }
-                })
+                auctionId(itemId, connection), new AuctionMessageTranslator(this))
         this.notToBeGCd = chat
         chat.sendMessage(JOIN_COMMAND_FORMAT)
     }
@@ -93,6 +76,17 @@ class Main {
             @Override
             void run() {
                 ui = new MainWindow()
+            }
+        })
+    }
+
+    @Override
+    void auctionClosed() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            void run() {
+                ui.showStatus(MainWindow.STATUS_LOST)
             }
         })
     }
