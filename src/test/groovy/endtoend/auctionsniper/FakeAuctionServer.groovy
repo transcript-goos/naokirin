@@ -28,15 +28,10 @@ class FakeAuctionServer {
         connection.connect()
         connection.login(String.format(Main.ITEM_ID_AS_LOGIN, itemId), AUCTION_PASSWORD, Main.AUCTION_RESOURCE)
         connection.getChatManager().addChatListener(
-            new ChatManagerListener() {
-
-                @Override
-                void chatCreated(Chat chat, boolean createdLocally) {
+                { Chat chat, boolean createdLocally ->
                     currentChat = chat
                     chat.addMessageListener(messageListener)
-                }
-            }
-        )
+                } as ChatManagerListener)
     }
 
     String getItemId() {
