@@ -50,12 +50,7 @@ class Main implements AuctionEventListener {
     }
 
     void disconnectWhenUICloses(XMPPConnection connection) {
-        ui.addWindowListener(new WindowAdapter() {
-            @Override
-            void windowClosed(WindowEvent e) {
-                connection.disconnect()
-            }
-        })
+        ui.addWindowListener({ connection.disconnect() } as WindowAdapter)
     }
 
     private static String auctionId(String itemId, XMPPConnection connection) {
@@ -71,23 +66,11 @@ class Main implements AuctionEventListener {
     }
 
     private void startUserInterface() {
-        SwingUtilities.invokeAndWait(new Runnable() {
-
-            @Override
-            void run() {
-                ui = new MainWindow()
-            }
-        })
+        SwingUtilities.invokeAndWait({ ui = new MainWindow() } as Runnable)
     }
 
     @Override
     void auctionClosed() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            void run() {
-                ui.showStatus(MainWindow.STATUS_LOST)
-            }
-        })
+        SwingUtilities.invokeLater({ ui.showStatus(MainWindow.STATUS_LOST) } as Runnable)
     }
 }
