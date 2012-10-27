@@ -72,4 +72,9 @@ class Main implements SniperListener {
     void sniperLost() {
         SwingUtilities.invokeLater({ ui.showStatus(MainWindow.STATUS_LOST) } as Runnable)
     }
+
+    @Override
+    void sniperBidding() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
