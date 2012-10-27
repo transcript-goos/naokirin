@@ -7,7 +7,7 @@ import org.jivesoftware.smack.Chat
 import java.awt.event.WindowAdapter
 import javax.swing.SwingUtilities
 
-class Main implements AuctionEventListener {
+class Main implements SniperListener {
     @SuppressWarnings('unused')
     private Chat notToBeGCd
 
@@ -43,7 +43,7 @@ class Main implements AuctionEventListener {
         disconnectWhenUICloses(connection)
 
         final Chat chat = connection.getChatManager().createChat(
-                auctionId(itemId, connection), new AuctionMessageTranslator(this))
+                auctionId(itemId, connection), new AuctionMessageTranslator(new AuctionSniper(this)))
         this.notToBeGCd = chat
         chat.sendMessage(JOIN_COMMAND_FORMAT)
     }
@@ -69,12 +69,7 @@ class Main implements AuctionEventListener {
     }
 
     @Override
-    void auctionClosed() {
+    void sniperLost() {
         SwingUtilities.invokeLater({ ui.showStatus(MainWindow.STATUS_LOST) } as Runnable)
-    }
-
-    @Override
-    void currentPrice(int price, int increment) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
