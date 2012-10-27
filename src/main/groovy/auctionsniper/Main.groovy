@@ -6,6 +6,7 @@ import org.jivesoftware.smack.XMPPConnection
 import org.jivesoftware.smack.Chat
 import java.awt.event.WindowAdapter
 import javax.swing.SwingUtilities
+import org.jivesoftware.smack.XMPPException
 
 class Main implements SniperListener {
     @SuppressWarnings('unused')
@@ -43,8 +44,21 @@ class Main implements SniperListener {
         disconnectWhenUICloses(connection)
 
         final Chat chat = connection.getChatManager().createChat(
-                auctionId(itemId, connection), new AuctionMessageTranslator(new AuctionSniper(this)))
+                auctionId(itemId, connection), null)
         this.notToBeGCd = chat
+
+        def auction = new Auction() {
+            void bid(int amount) {
+                try {
+                    chat.sendMessage(String.format(BID_COMMAND_FORMAT, amount))
+                } catch (XMPPException e) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        chat.addMessageListener(
+                new AuctionMessageTranslator(new AuctionSniper(auction, this))
+        )
         chat.sendMessage(JOIN_COMMAND_FORMAT)
     }
 
@@ -71,5 +85,10 @@ class Main implements SniperListener {
     @Override
     void sniperLost() {
         SwingUtilities.invokeLater({ ui.showStatus(MainWindow.STATUS_LOST) } as Runnable)
+    }
+
+    @Override
+    void sniperBidding() {
+        SwingUtilities.invokeLater({ ui.showStatus(MainWindow.STATUS_BIDDING) } as Runnable)
     }
 }

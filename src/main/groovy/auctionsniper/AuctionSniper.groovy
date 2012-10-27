@@ -1,9 +1,11 @@
 package main.groovy.auctionsniper
 
 class AuctionSniper implements AuctionEventListener {
+    private final Auction auction
     private final SniperListener sniperListener
 
-    AuctionSniper(sniperListener) {
+    AuctionSniper(auction, sniperListener) {
+        this.auction = auction
         this.sniperListener = sniperListener
     }
 
@@ -14,6 +16,7 @@ class AuctionSniper implements AuctionEventListener {
 
     @Override
     void currentPrice(int price, int increment) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        auction.bid(price + increment)
+        sniperListener.sniperBidding()
     }
 }
