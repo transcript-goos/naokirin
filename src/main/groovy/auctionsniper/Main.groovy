@@ -6,8 +6,9 @@ import org.jivesoftware.smack.XMPPConnection
 import org.jivesoftware.smack.Chat
 import java.awt.event.WindowAdapter
 import javax.swing.SwingUtilities
+import org.jivesoftware.smack.XMPPException
 
-class Main implements AuctionEventListener {
+class Main {
     @SuppressWarnings('unused')
     private Chat notToBeGCd
 
@@ -43,9 +44,57 @@ class Main implements AuctionEventListener {
         disconnectWhenUICloses(connection)
 
         final Chat chat = connection.getChatManager().createChat(
-                auctionId(itemId, connection), new AuctionMessageTranslator(this))
+                auctionId(itemId, connection), null)
         this.notToBeGCd = chat
-        chat.sendMessage(JOIN_COMMAND_FORMAT)
+
+        def auction = new XMPPAuction(chat)
+        chat.addMessageListener(
+                new AuctionMessageTranslator(
+                        new AuctionSniper(auction, new SniperStateDisplayer())))
+        auction.join()
+    }
+
+    static class XMPPAuction implements Auction {
+        private final Chat chat
+
+        XMPPAuction(chat) {
+            this.chat = chat
+        }
+
+        void bid(int amount) {
+            sendMessage(String.format(BID_COMMAND_FORMAT, amount))
+        }
+
+        void join() {
+            sendMessage(JOIN_COMMAND_FORMAT)
+        }
+
+        private void sendMessage(final String message) {
+            try {
+                chat.sendMessage(message)
+            } catch (XMPPException e) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    class SniperStateDisplayer implements SniperListener {
+        @Override
+        void sniperLost() {
+            showStatus(MainWindow.STATUS_LOST)
+        }
+
+        void sniperBidding() {
+            showStatus(MainWindow.STATUS_BIDDING)
+        }
+
+        void sniperWinning() {
+            showStatus(MainWindow.STATUS_WINNING)
+        }
+
+        void showStatus(final String status) {
+            SwingUtilities.invokeLater({ ui.showStatus(status) } as Runnable)
+        }
     }
 
     void disconnectWhenUICloses(XMPPConnection connection) {
@@ -69,12 +118,12 @@ class Main implements AuctionEventListener {
     }
 
     @Override
-    void auctionClosed() {
+    void sniperLost() {
         SwingUtilities.invokeLater({ ui.showStatus(MainWindow.STATUS_LOST) } as Runnable)
     }
 
     @Override
-    void currentPrice(int price, int increment) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    void sniperBidding() {
+        SwingUtilities.invokeLater({ ui.showStatus(MainWindow.STATUS_BIDDING) } as Runnable)
     }
 }
