@@ -8,7 +8,7 @@ import java.awt.event.WindowAdapter
 import javax.swing.SwingUtilities
 import org.jivesoftware.smack.XMPPException
 
-class Main implements SniperListener {
+class Main {
     @SuppressWarnings('unused')
     private Chat notToBeGCd
 
@@ -49,8 +49,8 @@ class Main implements SniperListener {
 
         def auction = new XMPPAuction(chat)
         chat.addMessageListener(
-                new AuctionMessageTranslator(new AuctionSniper(auction, this))
-        )
+                new AuctionMessageTranslator(
+                        new AuctionSniper(auction, new SniperStateDisplayer())))
         auction.join()
     }
 
@@ -75,6 +75,25 @@ class Main implements SniperListener {
             } catch (XMPPException e) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    class SniperStateDisplayer implements SniperListener {
+        @Override
+        void sniperLost() {
+            showStatus(MainWindow.STATUS_LOST)
+        }
+
+        void sniperBidding() {
+            showStatus(MainWindow.STATUS_BIDDING)
+        }
+
+        void sniperWinning() {
+            showStatus(MainWindow.STATUS_WINNING)
+        }
+
+        void showStatus(final String status) {
+            SwingUtilities.invokeLater({ ui.showStatus(status) } as Runnable)
         }
     }
 
