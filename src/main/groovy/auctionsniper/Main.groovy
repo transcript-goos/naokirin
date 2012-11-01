@@ -8,7 +8,7 @@ import java.awt.event.WindowAdapter
 import javax.swing.SwingUtilities
 import org.jivesoftware.smack.XMPPException
 
-class Main implements SniperListener {
+class Main {
     @SuppressWarnings('unused')
     private Chat notToBeGCd
 
@@ -47,19 +47,54 @@ class Main implements SniperListener {
                 auctionId(itemId, connection), null)
         this.notToBeGCd = chat
 
-        def auction = new Auction() {
-            void bid(int amount) {
-                try {
-                    chat.sendMessage(String.format(BID_COMMAND_FORMAT, amount))
-                } catch (XMPPException e) {
-                    e.printStackTrace()
-                }
+        def auction = new XMPPAuction(chat)
+        chat.addMessageListener(
+                new AuctionMessageTranslator(
+                        new AuctionSniper(auction, new SniperStateDisplayer())))
+        auction.join()
+    }
+
+    static class XMPPAuction implements Auction {
+        private final Chat chat
+
+        XMPPAuction(chat) {
+            this.chat = chat
+        }
+
+        void bid(int amount) {
+            sendMessage(String.format(BID_COMMAND_FORMAT, amount))
+        }
+
+        void join() {
+            sendMessage(JOIN_COMMAND_FORMAT)
+        }
+
+        private void sendMessage(final String message) {
+            try {
+                chat.sendMessage(message)
+            } catch (XMPPException e) {
+                e.printStackTrace()
             }
         }
-        chat.addMessageListener(
-                new AuctionMessageTranslator(new AuctionSniper(auction, this))
-        )
-        chat.sendMessage(JOIN_COMMAND_FORMAT)
+    }
+
+    class SniperStateDisplayer implements SniperListener {
+        @Override
+        void sniperLost() {
+            showStatus(MainWindow.STATUS_LOST)
+        }
+
+        void sniperBidding() {
+            showStatus(MainWindow.STATUS_BIDDING)
+        }
+
+        void sniperWinning() {
+            showStatus(MainWindow.STATUS_WINNING)
+        }
+
+        void showStatus(final String status) {
+            SwingUtilities.invokeLater({ ui.showStatus(status) } as Runnable)
+        }
     }
 
     void disconnectWhenUICloses(XMPPConnection connection) {
