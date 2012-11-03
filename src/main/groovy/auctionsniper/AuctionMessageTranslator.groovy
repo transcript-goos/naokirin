@@ -4,10 +4,15 @@ import org.jivesoftware.smack.MessageListener
 import org.jivesoftware.smack.Chat
 import org.jivesoftware.smack.packet.Message
 
+import main.groovy.auctionsniper.AuctionEventListener.PriceSource
+import static main.groovy.auctionsniper.AuctionEventListener.PriceSource.*
+
 class AuctionMessageTranslator implements MessageListener {
     private AuctionEventListener listener
+    private final String sniperId
 
-    AuctionMessageTranslator(listener) {
+    AuctionMessageTranslator(sniperId, listener) {
+        this.sniperId = sniperId
         this.listener = listener
     }
 
@@ -20,7 +25,7 @@ class AuctionMessageTranslator implements MessageListener {
             listener.auctionClosed()
         }
         else if ('PRICE' == eventType) {
-            listener.currentPrice(event.currentPrice(), event.increment())
+            listener.currentPrice(event.currentPrice(), event.increment(), event.isFrom(sniperId))
         }
     }
 
@@ -29,6 +34,12 @@ class AuctionMessageTranslator implements MessageListener {
         String type() { return get('Event') }
         int currentPrice() { return getInt('CurrentPrice') }
         int increment() {return getInt('Increment') }
+
+        public PriceSource isFrom(String sniperId) {
+            return sniperId == bidder() ? FromSniper : FromOtherBidder
+        }
+
+        private String bidder() { return get('Bidder') }
 
         private int getInt(String fieldName) {
             return Integer.parseInt(get(fieldName))

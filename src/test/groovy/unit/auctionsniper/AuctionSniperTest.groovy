@@ -24,7 +24,7 @@ class AuctionSniperTest extends Specification {
         final def increment = 25
 
         when:
-        sniper.currentPrice(price, increment)
+        sniper.currentPrice(price, increment, null)
 
         then:
         1 * auction.bid(price + increment)

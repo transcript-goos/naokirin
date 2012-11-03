@@ -1,5 +1,7 @@
 package main.groovy.auctionsniper
 
+import main.groovy.auctionsniper.AuctionEventListener.PriceSource
+
 class AuctionSniper implements AuctionEventListener {
     private final Auction auction
     private final SniperListener sniperListener
@@ -15,7 +17,7 @@ class AuctionSniper implements AuctionEventListener {
     }
 
     @Override
-    void currentPrice(int price, int increment) {
+    void currentPrice(int price, int increment, PriceSource priceSource) {
         auction.bid(price + increment)
         sniperListener.sniperBidding()
     }
