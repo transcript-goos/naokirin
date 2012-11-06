@@ -1,11 +1,9 @@
 package test.groovy.endtoend.auctionsniper
 
 import static test.groovy.endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME
-import static main.groovy.auctionsniper.ui.MainWindow.STATUS_JOINING
-import static main.groovy.auctionsniper.ui.MainWindow.STATUS_LOST
+import static main.groovy.auctionsniper.ui.MainWindow.*
 
 import main.groovy.auctionsniper.Main
-import main.groovy.auctionsniper.ui.MainWindow
 
 class ApplicationRunner {
     static final String SNIPER_ID = 'sniper'
@@ -30,15 +28,23 @@ class ApplicationRunner {
         driver.showsSniperStatus(STATUS_JOINING)
     }
 
-    void showsSniperHasLostAuction() {
-        driver.showsSniperStatus(STATUS_LOST)
-    }
-
     void stop() {
             driver?.dispose()
     }
 
-   void hasShownSniperIsBidding() {
-       driver.showsSniperStatus(MainWindow.STATUS_BIDDING)
+    void showsSniperHasLostAuction() {
+        driver.showsSniperStatus(STATUS_LOST)
+    }
+
+    void hasShownSniperIsBidding() {
+       driver.showsSniperStatus(STATUS_BIDDING)
+    }
+
+    void hasShownSniperIsWinning() {
+        driver.showsSniperStatus(STATUS_WINNING)
+    }
+
+    void showsSniperHasWonAuction() {
+        driver.showsSniperStatus(STATUS_WINNING)
     }
 }

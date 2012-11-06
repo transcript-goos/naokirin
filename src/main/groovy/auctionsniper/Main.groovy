@@ -49,7 +49,7 @@ class Main {
 
         def auction = new XMPPAuction(chat)
         chat.addMessageListener(
-                new AuctionMessageTranslator(
+                new AuctionMessageTranslator(connection.getUser(),
                         new AuctionSniper(auction, new SniperStateDisplayer())))
         auction.join()
     }
@@ -90,6 +90,11 @@ class Main {
 
         void sniperWinning() {
             showStatus(MainWindow.STATUS_WINNING)
+        }
+
+        @Override
+        void sniperWon() {
+            showStatus(MainWindow.STATUS_WON)
         }
 
         void showStatus(final String status) {

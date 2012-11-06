@@ -1,8 +1,12 @@
 package main.groovy.auctionsniper
 
+import main.groovy.auctionsniper.AuctionEventListener.PriceSource
+import static main.groovy.auctionsniper.AuctionEventListener.PriceSource.*
+
 class AuctionSniper implements AuctionEventListener {
     private final Auction auction
     private final SniperListener sniperListener
+    private boolean isWinning = false
 
     AuctionSniper(auction, sniperListener) {
         this.auction = auction
@@ -11,12 +15,21 @@ class AuctionSniper implements AuctionEventListener {
 
     @Override
     void auctionClosed() {
-        sniperListener.sniperLost()
+        if (isWinning) {
+            sniperListener.sniperWon()
+        } else {
+            sniperListener.sniperLost()
+        }
     }
 
     @Override
-    void currentPrice(int price, int increment) {
-        auction.bid(price + increment)
-        sniperListener.sniperBidding()
+    void currentPrice(int price, int increment, PriceSource priceSource) {
+        isWinning = priceSource == PriceSource.FromSniper
+        if (isWinning) {
+            sniperListener.sniperWinning()
+        } else {
+            auction.bid(price + increment)
+            sniperListener.sniperBidding()
+        }
     }
 }
