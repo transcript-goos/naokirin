@@ -51,4 +51,16 @@ class AuctionSniperTest extends Specification {
         _ * sniperListener.sniperBidding()
         (1.._) * sniperListener.sniperLost()
     }
+
+    def "reports won if auction closes when winning"() {
+        when:
+        sniper.currentPrice(123, 45, FromSniper)
+        sniper.auctionClosed()
+        _ * auction._()
+
+        then:
+        _ * sniperListener.sniperWinning()
+        (1.._) * sniperListener.sniperWon()
+
+    }
 }

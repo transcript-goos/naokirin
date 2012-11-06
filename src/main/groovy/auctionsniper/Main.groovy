@@ -92,6 +92,11 @@ class Main {
             showStatus(MainWindow.STATUS_WINNING)
         }
 
+        @Override
+        void sniperWon() {
+            showStatus(MainWindow.STATUS_WON)
+        }
+
         void showStatus(final String status) {
             SwingUtilities.invokeLater({ ui.showStatus(status) } as Runnable)
         }
