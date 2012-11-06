@@ -12,7 +12,7 @@ class AuctionSniperTest extends Specification {
     private final def sniperListener = Mock(SniperListener)
     private final def sniper = new AuctionSniper(auction, sniperListener)
 
-    def "reports lost when auction closes"() {
+    def "reports lost when auction closes immediately"() {
         when:
         sniper.auctionClosed()
 
@@ -39,5 +39,16 @@ class AuctionSniperTest extends Specification {
 
         then:
         (1.._) * sniperListener.sniperWinning()
+    }
+
+    def "reports lost if auction closes when bidding"() {
+        when:
+        sniper.currentPrice(123, 45, FromOtherBidder)
+        sniper.auctionClosed()
+        _ * auction._()
+
+        then:
+        _ * sniperListener.sniperBidding()
+        (1.._) * sniperListener.sniperLost()
     }
 }
